@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Degrees of Comparison Game</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f9f9f9; padding: 20px; }
+    h1 { color: #333; }
+    .question-box { background: #fff; padding: 15px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+    .options input { margin-right: 10px; }
+    .feedback { margin-top: 10px; }
+    .score-box { font-weight: bold; color: green; margin-top: 20px; }
+    button { margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+<h1>Degrees of Comparison: English Grammar Game</h1>
+<div id="game"></div>
+<div class="score-box" id="scoreBox">Score: 0 / 10</div>
+
+<script>
+const questions = [
+  {
+    q: "1. Which sentence uses the **comparative** degree correctly?",
+    options: [
+      "She is the smartest girl in the class.",
+      "She is more smart than her sister.",
+      "She is smarter than her brother.",
+      "She is smart than her brother."
+    ],
+    answer: 2,
+    reason: "Comparative form of 'smart' is 'smarter'. 'More smart' is incorrect."
+  },
+  {
+    q: "2. Which word is in the **superlative** degree?",
+    options: ["fast", "faster", "fastest", "more fast"],
+    answer: 2,
+    reason: "'Fastest' is the superlative form of 'fast'."
+  },
+  {
+    q: "3. Which sentence is grammatically correct?",
+    options: [
+      "Mount Everest is the most high mountain.",
+      "Mount Everest is the higher mountain.",
+      "Mount Everest is the highest mountain.",
+      "Mount Everest is higher than all mountain."
+    ],
+    answer: 2,
+    reason: "'Highest' is the correct superlative form for a single top item."
+  },
+  {
+    q: "4. Identify the **positive** degree form:",
+    options: ["bigger", "biggest", "big", "most big"],
+    answer: 2,
+    reason: "'Big' is the positive (base) form of the adjective."
+  },
+  {
+    q: "5. Choose the correct comparative sentence:",
+    options: [
+      "This book is interestinger than that one.",
+      "This book is more interesting than that one.",
+      "This book is most interesting than that one.",
+      "This book is interesting than that one."
+    ],
+    answer: 1,
+    reason: "For longer adjectives like 'interesting', we use 'more' + adjective."
+  },
+  {
+    q: "6. What is the correct superlative of 'good'?",
+    options: ["goodest", "more good", "best", "most good"],
+    answer: 2,
+    reason: "'Good' has an irregular superlative form: 'best'."
+  },
+  {
+    q: "7. Choose the sentence that uses the **positive** degree:",
+    options: [
+      "This phone is better than mine.",
+      "This phone is the best of all.",
+      "This phone is good.",
+      "This phone is more good than others."
+    ],
+    answer: 2,
+    reason: "'Good' is the positive form. 'Better' is comparative, 'best' is superlative."
+  },
+  {
+    q: "8. Which of these uses the **comparative** form correctly?",
+    options: [
+      "She is the most talented of the group.",
+      "She is talented than him.",
+      "She is more talented than him.",
+      "She is talentedest than him."
+    ],
+    answer: 2,
+    reason: "'More talented' is the correct comparative form for 'talented'."
+  },
+  {
+    q: "9. Which is NOT a correct degree of comparison?",
+    options: ["happy, happier, happiest", "good, better, best", "bad, badder, baddest", "fast, faster, fastest"],
+    answer: 2,
+    reason: "'Badder' and 'baddest' are incorrect. Correct forms: 'bad, worse, worst'."
+  },
+  {
+    q: "10. Which one shows a **superlative** form?",
+    options: [
+      "John is taller than Mike.",
+      "John is tall.",
+      "John is the tallest of the three.",
+      "John is more tall than Mike."
+    ],
+    answer: 2,
+    reason: "'Tallest' is the superlative form, used when comparing more than two."
+  }
+];
+
+let score = 0;
+
+function renderGame() {
+  const container = document.getElementById('game');
+  questions.forEach((item, index) => {
+    const qDiv = document.createElement('div');
+    qDiv.classList.add('question-box');
+    qDiv.innerHTML = `<p>${item.q}</p>`;
+
+    const optDiv = document.createElement('div');
+    optDiv.classList.add('options');
+
+    item.options.forEach((opt, i) => {
+      const optId = `q${index}_opt${i}`;
+      optDiv.innerHTML += `
+        <label><input type="radio" name="q${index}" value="${i}" id="${optId}"> ${opt}</label><br>
+      `;
+    });
+
+    const submitBtn = document.createElement('button');
+    submitBtn.textContent = "Submit";
+    submitBtn.onclick = () => checkAnswer(index);
+
+    const feedback = document.createElement('div');
+    feedback.classList.add('feedback');
+    feedback.id = `feedback${index}`;
+
+    qDiv.appendChild(optDiv);
+    qDiv.appendChild(submitBtn);
+    qDiv.appendChild(feedback);
+
+    container.appendChild(qDiv);
+  });
+}
+
+function checkAnswer(qIndex) {
+  const selected = document.querySelector(`input[name="q${qIndex}"]:checked`);
+  const feedback = document.getElementById(`feedback${qIndex}`);
+  if (!selected) {
+    feedback.innerHTML = "<span style='color:red;'>Please select an option!</span>";
+    return;
+  }
+
+  const answer = parseInt(selected.value);
+  if (answer === questions[qIndex].answer) {
+    if (!feedback.classList.contains('answered')) {
+      score++;
+      document.getElementById('scoreBox').textContent = `Score: ${score} / 10`;
+    }
+    feedback.innerHTML = `<span style="color:green;">Correct! ✔ ${questions[qIndex].reason}</span>`;
+  } else {
+    feedback.innerHTML = `<span style="color:red;">Incorrect ✘ - ${questions[qIndex].reason}</span>`;
+  }
+  feedback.classList.add('answered');
+}
+
+renderGame();
+</script>
+
+</body>
+</html>
